@@ -6,42 +6,52 @@
 
 import utils
 import numpy as np
-import math
+import matplotlib.pyplot as plt
 
 class DemoD1:
 
     def __init__(self):
         
-        self.dados = utils.ler_dados_mat_grupo_01()
-        self.distancias = []
+        self.dados = utils.ler_dados_mat_grupo_01('grupoDados1.mat')
+        self.distancias = utils.distancia_euclidiana(self.dados)
 
-        self.distancia_euclidiana()
+        self.distancias_ordenadas = utils.ordena_distancias(self.distancias)
 
-        self.distancias_ordenadas = np.argsort(self.distancias)
-        print(self.distancias)
-        # print(self.dados)
+        self.rotulo_train_k1 = utils.definir_rotulo(self.distancias_ordenadas, self.distancias, self.dados.trainRots, 1)
+        self.acuracia_k1 = utils.definir_acuracia(self.rotulo_train_k1, self.dados.testRots)
+
+        self.rotulo_train_k10 = utils.definir_rotulo(self.distancias_ordenadas, self.distancias, self.dados.trainRots, 10)
+        self.acuracia_k10 = utils.definir_acuracia(self.rotulo_train_k10, self.dados.testRots)
+
+        self.rotulo_train_k3 = utils.definir_rotulo(self.distancias_ordenadas, self.distancias, self.dados.trainRots, 3)
+        self.acuracia_k3 = utils.definir_acuracia(self.rotulo_train_k3, self.dados.testRots)
+
+        print(f'### Acurácia utilizando o K = 1: {self.acuracia_k1}')
+        print(f'### Acurácia utilizando o K = 10: {self.acuracia_k10}')
+        print(f'### Acurácia utilizando o K = 3: {self.acuracia_k3}, acurácia máxima alcançada')
+        # self.exibir_grafico(self.dados, self.rotulo_train, '', '')
 
 
-    def distancia_euclidiana(self):
+    def exibir_grafico(self, dados, rotulos, x, y):
 
-        np_train = np.array(self.dados.grupoTrain)
-        np_test = np.array(self.dados.grupoTest)
+        dados_1 = []
+        dados_2 = []
+        dados_3 = []
 
-        for i_test in range(len(np_test)):
+        for i in range(len(rotulos)):
 
-            linha_distancia = []
+            valor_rotulo = rotulos[i]
 
-            for i_train in range(len(np_train)):
+            if (valor_rotulo == 1 ):
+                dados_1.append(dados.grupoTest[i])
+            elif (valor_rotulo == 2):
+                dados_2.append(dados.grupoTest[i])
+            elif (valor_rotulo == 3):
+                dados_3.append(dados.grupoTest[i])
 
-                # soma_test_train = np.sqrt(np.sum(np.power(np_test[i_test] - np_train[i_train], 2)))
-                subtracao_test_train = np_test[i_test] - np_train[i_train]
-                potencia_test_train = np.power(subtracao_test_train, 2)
-                soma_test_train = np.sum(potencia_test_train)
-                raiz_test_train = np.sqrt(soma_test_train)
+        plt.plot(np.array(dados_1)[:,0], np.array(dados_1)[:,2], 'r^', dados_2, dados_2, 'b+', dados_3, dados_3, 'go')
 
-                linha_distancia.append(raiz_test_train)
-            
-            self.distancias.append(linha_distancia)
+        plt.show()
 
 
 if __name__ == '__main__':
