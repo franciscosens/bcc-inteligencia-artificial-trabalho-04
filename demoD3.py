@@ -13,14 +13,14 @@ class DemoD3:
     def __init__(self):
         
         self.dados = utils.ler_dados_mat_grupo_01('grupoDados3.mat')
-        self.distancias = utils.distancia_euclidiana(self.dados)
+        
+        self.distancias = utils.distancia_euclidiana(self.dados.grupoTest, self.dados.grupoTrain)
 
         self.distancias_ordenadas = utils.ordena_distancias(self.distancias)
 
         self.rotulo_train_k1 = utils.definir_rotulo(self.distancias_ordenadas, self.distancias, self.dados.trainRots, 1)
         self.acuracia_k1 = utils.definir_acuracia(self.rotulo_train_k1, self.dados.testRots)
 
-        
         self.rotulo_train_k7 = utils.definir_rotulo(self.distancias_ordenadas, self.distancias, self.dados.trainRots, 7)
         self.acuracia_k7 = utils.definir_acuracia(self.rotulo_train_k7, self.dados.testRots)
 

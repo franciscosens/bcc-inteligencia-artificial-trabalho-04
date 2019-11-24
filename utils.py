@@ -11,11 +11,11 @@ import numpy as np
 from scipy import stats
 
 
-def distancia_euclidiana(dados):
+def distancia_euclidiana(dados_test, dados_train):
 
     matriz_aux = []
-    np_train = np.array(dados.grupoTrain)
-    np_test = np.array(dados.grupoTest)
+    np_train = np.array(dados_train)
+    np_test = np.array(dados_test)
 
     for i_test in range(len(np_test)):
 
@@ -68,3 +68,28 @@ def definir_acuracia(rotulo_train, testRots):
     acuracia = soma_corretos / len(testRots)
 
     return acuracia
+
+
+def realizar_normalizacao(matriz_dados):
+
+    # for i in range(len(matriz_dados)):
+
+    matriz_aux = matriz_dados
+    novas_colunas = []
+
+    for i in range(matriz_dados.shape[1]):
+        parte_cima = matriz_aux[:, i] - np.max(matriz_aux[:, i])
+        parte_baixo = np.max(matriz_aux[:, i]) - np.min(matriz_aux[:, i])
+        novas_colunas.append(np.absolute(np.array(parte_cima / parte_baixo)))
+
+    for i in range(len(novas_colunas)):
+        teste = novas_colunas[i]
+        np.insert(matriz_aux, [1], teste, axis=0)
+    	
+        # matriz_aux[i] = np.array(coluna_aux)
+
+    # matriz_aux = np.append(matriz_aux, np.array(novas_colunas).reshape(60,13), axis=1)
+
+    return matriz_aux
+        
+
