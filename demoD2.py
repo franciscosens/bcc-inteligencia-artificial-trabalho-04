@@ -22,10 +22,13 @@ class DemoD2:
         self.distancias_ordenadas = utils.ordena_distancias(self.distancias)
 
         self.rotulo_train_k1 = utils.definir_rotulo(self.distancias_ordenadas, self.distancias, self.dados.trainRots, 1)
-        self.acuracia_k1 = utils.definir_acuracia(self.rotulo_train_k1, self.dados.testRots)
+        self.acuracia_k1 = '%.2f' % utils.definir_acuracia(self.rotulo_train_k1, self.dados.testRots)
 
-        self.rotulo_train_k7 = utils.definir_rotulo(self.distancias_ordenadas, self.distancias, self.dados.trainRots, 3)
-        self.acuracia_k7 = utils.definir_acuracia(self.rotulo_train_k7, self.dados.testRots)
+        for i in range(100):
+            if i > 0:
+                self.rotulo_train_k7 = utils.definir_rotulo(self.distancias_ordenadas, self.distancias, self.dados.trainRots, i)
+                self.acuracia_k7 = '%.2f' % utils.definir_acuracia(self.rotulo_train_k7, self.dados.testRots)
+                print(f'### Acurácia utilizando o K = {i}: {self.acuracia_k7}')
 
         print(f'### Acurácia utilizando o K = 1: {self.acuracia_k1}')
         print('Ajustando o K para 7, conseguimos chegar a acurácia abaixo, pois passou a considerar 7 elementos mais próximos, assim aumentando nossa acurácia')
