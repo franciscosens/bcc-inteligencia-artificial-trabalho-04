@@ -34,9 +34,13 @@ class DemoD2:
         print(f'### Acurácia utilizando o K = 3: {self.acuracia_k3}')
 
         # Exibe os gráficos com os rotulos pré existentes e os rotulos descobertos pelo nosso algoritmo
-        utils.exibir_grafico(self.dados.grupoTest, self.dados.testRots, 0, 1)
-        # Exibe os gráficos com os rotulos com K = 3
-        utils.exibir_grafico(self.dados.grupoTest, self.rotulo_train_k3, 0, 1)
+
+        # Armazena dados em array para mandar para função que criar o gráfico do dataset, k = 3
+        self.rotulos = [self.dados.testRots, self.rotulo_train_k3]
+        self.title = ["Dataset", "K = 3"]
+
+        # Gera gráfico
+        utils.exibir_grafico_multiplo(self.dados.grupoTest, self.rotulos, 0, 1, self.title, 'Demo D2', height=6, width=10)
         
 
 if __name__ == '__main__':

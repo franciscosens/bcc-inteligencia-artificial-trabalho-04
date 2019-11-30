@@ -121,12 +121,12 @@ def exibir_grafico(dados, rotulos, d1, d2, title = '', figure = 1):
 
     plt.show()
 
-def exibir_grafico_multiplo(dados, rotulos, d1, d2, title, main_title = ''):
+def exibir_grafico_multiplo(dados, rotulos, d1, d2, title, main_title = '', height = 6, width = 16):
 
 
     fig, ax = plt.subplots(ncols=len(rotulos), nrows=1, constrained_layout=True)
-    fig.set_figheight(6)
-    fig.set_figwidth(16)
+    fig.set_figheight(height)
+    fig.set_figwidth(width)
     fig.suptitle(main_title, fontsize=16)
 
     for i in range(len(rotulos)):
