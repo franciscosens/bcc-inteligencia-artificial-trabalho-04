@@ -110,12 +110,29 @@ def getDadosRotulo(dados, rotulos, rotulo, indice):
     return ret
 
 
-def exibir_grafico(dados, rotulos, d1, d2):
+def exibir_grafico(dados, rotulos, d1, d2, title = '', figure = 1):
 
     fig, ax = plt.subplots() 
-
+    plt.figure(figure)
     ax.scatter(getDadosRotulo(dados, rotulos, 1, d1), getDadosRotulo(dados, rotulos, 1, d2), c='red' , marker='^')
     ax.scatter(getDadosRotulo(dados, rotulos, 2, d1), getDadosRotulo(dados, rotulos, 2, d2), c='blue' , marker='+')
     ax.scatter(getDadosRotulo(dados, rotulos, 3, d1), getDadosRotulo(dados, rotulos, 3, d2), c='green', marker='.')
+    ax.set_title(title)
+
+    plt.show()
+
+def exibir_grafico_multiplo(dados, rotulos, d1, d2, title, main_title = ''):
+
+
+    fig, ax = plt.subplots(ncols=len(rotulos), nrows=1, constrained_layout=True)
+    fig.set_figheight(6)
+    fig.set_figwidth(16)
+    fig.suptitle(main_title, fontsize=16)
+
+    for i in range(len(rotulos)):
+        ax[i].scatter(getDadosRotulo(dados, rotulos[i], 1, d1), getDadosRotulo(dados, rotulos[i], 1, d2), c='red' , marker='^')
+        ax[i].scatter(getDadosRotulo(dados, rotulos[i], 2, d1), getDadosRotulo(dados, rotulos[i], 2, d2), c='blue' , marker='+')
+        ax[i].scatter(getDadosRotulo(dados, rotulos[i], 3, d1), getDadosRotulo(dados, rotulos[i], 3, d2), c='green', marker='.')
+        ax[i].set_title(title[i])
 
     plt.show()

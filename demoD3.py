@@ -37,12 +37,14 @@ class DemoD3:
         print('Ajustando o K para 7, conseguimos chegar a acurácia abaixo, pois passou a considerar 7 elementos mais próximos, assim aumentando nossa acurácia')
         print(f'### Acurácia utilizando o K = 7: {self.acuracia_k7}')
 
-        # Exibe os gráficos com os rotulos pré existentes e os rotulos descobertos pelo nosso algoritmo
-        utils.exibir_grafico(self.dados.grupoTest, self.dados.testRots, 0, 1)
-        # Exibe os gráficos com os rotulos com K = 7
-        utils.exibir_grafico(self.dados.grupoTest, self.rotulo_train_k7, 0, 1)
-        # Exibe os gráficos com os rotulos com K = 1
-        utils.exibir_grafico(self.dados.grupoTest, self.rotulo_train_k1, 0, 1)
+
+
+        # Armazena dados em array para mandar para função que criar o gráfico do dataset, k = 7 e k = 1
+        self.rotulos = [self.dados.testRots, self.rotulo_train_k7, self.rotulo_train_k1]
+        self.title = ["Dataset", "K = 7", "K = 1"]
+
+        # Gera gráfico
+        utils.exibir_grafico_multiplo(self.dados.grupoTest, self.rotulos, 0, 1, self.title, 'Demo D3')
 
         
 if __name__ == '__main__':
