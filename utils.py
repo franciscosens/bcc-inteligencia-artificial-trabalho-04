@@ -9,11 +9,13 @@ import scipy.io as scipy
 import os
 import numpy as np
 from scipy import stats
+import matplotlib.pyplot as plt
 
 
 def distancia_euclidiana(dados_test, dados_train):
 
     matriz_aux = []
+    # Separa os dados de treinamento e teste
     np_train = np.array(dados_train)
     np_test = np.array(dados_test)
 
@@ -23,46 +25,57 @@ def distancia_euclidiana(dados_test, dados_train):
 
         for i_train in range(len(np_train)):
 
-            # soma_test_train = np.sqrt(np.sum(np.power(np_test[i_test] - np_train[i_train], 2)))
             subtracao_test_train = np_test[i_test] - np_train[i_train]
             potencia_test_train = np.power(subtracao_test_train, 2)
             soma_test_train = np.sum(potencia_test_train)
             raiz_test_train = np.sqrt(soma_test_train)
 
+            # Após calcular a distancia de cada elemento, adiciona para uma nova matriz
             linha_distancia.append(raiz_test_train)
         
         matriz_aux.append(linha_distancia)
 
+    # Retorna a matriz com as distancias calculadas
     return matriz_aux
 
 
-def ler_dados_mat_grupo_01(grupoDados):
+def ler_dados_mat(grupoDados):
 
+    # Lê os dados do dataset passado pela professora
     diretorio_corrente = os.getcwd()
     mat = scipy.loadmat(f'{diretorio_corrente}\/assets\Dados\/{grupoDados}')
 
+    # Define uma tupla com cada grupo de dado do dataset
     __Retorno = namedtuple('Retorno', ['grupoTest', 'grupoTrain', 'testRots', 'trainRots'])
     
+    # Retorna os dados separados em seus grupos
     return __Retorno(mat['grupoTest'], mat['grupoTrain'], mat['testRots'], mat['trainRots'])
 
 
-def ordena_distancias(distancias):
+def ordenar_distancias(distancias):
+    #Ordena a matriz de distancia, nessa função é retornada uma matriz, onde seu valor são os indices dos dados ordenados da matriz de entrada 
     return np.argsort(distancias)
 
 
-def definir_rotulo(ordem_matriz, matriz_distancia, trainRots, k):
+def definir_rotulo(ordem_matriz, trainRots, k):
     
+    #Obtem os elemento com a menor distancia de acordo com o valor de k
+    # K = 1 -> Vai trazer o primeiro elemento mais próximo
+    # K = 10 -> Vai trzar os 10 elementos mais próximos
     menor_distancia = ordem_matriz[:, np.arange(k)]
     rotulos_aux = []
 
     for i in range(len(menor_distancia)):
+        # Obtém o rotulo de acordo com o K escolhido
         rotulos_aux.append(stats.mode(trainRots[menor_distancia[i][0:k]]).mode[0])
 
+    # Retorna o rotulo obtido dos indices mais próximos
     return rotulos_aux
 
 
 def definir_acuracia(rotulo_train, testRots):
     
+    # Calcula a acuracia, batendo o rotulo descoberto com o rotulo de treinamento
     rotulos_corretos = rotulo_train == testRots
     soma_corretos = np.sum(rotulos_corretos)
     acuracia = soma_corretos / len(testRots)
@@ -72,23 +85,37 @@ def definir_acuracia(rotulo_train, testRots):
 
 def realizar_normalizacao(matriz_dados):
 
-    # for i in range(len(matriz_dados)):
+    # Cria matriz com o shape que desejo ao final do calculo da distancia
+    matriz_aux = np.ndarray(shape=matriz_dados.shape)
 
-    matriz_aux = []
+    # Normaliza o dados para cada coluna "caracteristica" da matriz de entrada
+    for i in range(matriz_dados.shape[1]):
+        parte_cima = matriz_dados[:,i] - np.min(matriz_dados[:, i])
+        parte_baixo = np.max(matriz_dados[:, i]) - np.min(matriz_dados[:, i])
+        matriz_aux[:,i] = parte_cima / parte_baixo
 
-    for i in range(len(matriz_dados)):
-        parte_cima = matriz_dados[i,:] - np.max(matriz_dados[i,:])
-        parte_baixo = np.max(matriz_dados[i,:]) - np.min(matriz_dados[i,:])
-        matriz_aux.append(np.absolute(np.array(parte_cima / parte_baixo)))
-
-    # for i in range(len(novas_colunas)):
-    #     teste = novas_colunas[i]
-    #     np.insert(matriz_aux, [1], teste, axis=0)
-    	
-        # matriz_aux[i] = np.array(coluna_aux)
-
-    # matriz_aux = np.append(matriz_aux, np.array(novas_colunas).reshape(60,13), axis=1)
-
-    return np.array(matriz_aux)
+    return matriz_aux
         
 
+def getDadosRotulo(dados, rotulos, rotulo, indice):
+    
+    ret = []
+
+    for idx in range(0, len(dados)):
+
+        if(rotulos[idx] == rotulo):
+
+            ret.append(dados[idx][indice])        
+
+    return ret
+
+
+def exibir_grafico(dados, rotulos, d1, d2):
+
+    fig, ax = plt.subplots() 
+
+    ax.scatter(getDadosRotulo(dados, rotulos, 1, d1), getDadosRotulo(dados, rotulos, 1, d2), c='red' , marker='^')
+    ax.scatter(getDadosRotulo(dados, rotulos, 2, d1), getDadosRotulo(dados, rotulos, 2, d2), c='blue' , marker='+')
+    ax.scatter(getDadosRotulo(dados, rotulos, 3, d1), getDadosRotulo(dados, rotulos, 3, d2), c='green', marker='.')
+
+    plt.show()
